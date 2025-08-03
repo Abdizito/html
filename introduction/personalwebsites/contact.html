@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Contact Page</h1>
+    <div class="form-container">
+    <h2>Developer Registration</h2>
+    <form action="/register" method="post">
+
+      <!-- Full Name -->
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" name="fullname" required>
+
+      <!-- Email -->
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" required>
+
+      <!-- Programming Languages (Checkboxes) -->
+      <label>Programming Languages Known</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="languages" value="HTML"> HTML</label>
+        <label><input type="checkbox" name="languages" value="CSS"> CSS</label>
+        <label><input type="checkbox" name="languages" value="JavaScript"> JavaScript</label>
+        <label><input type="checkbox" name="languages" value="Python"> Python</label>
+        <label><input type="checkbox" name="languages" value="Java"> Java</label>
+        <label><input type="checkbox" name="languages" value="C++"> C++</label>
+      </div>
+
+      <!-- Experience Level (Dropdown) -->
+      <label for="experience">Experience Level</label>
+      <select id="experience" name="experience" required>
+        <option value="">-- Select Experience Level --</option>
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+
+      <!-- Work Preference (Radio Buttons) -->
+      <label>Preferred Work Type</label>
+      <div class="radio-group">
+        <label><input type="radio" name="work_type" value="remote" required> Remote</label>
+        <label><input type="radio" name="work_type" value="on-site"> On-site</label>
+        <label><input type="radio" name="work_type" value="hybrid"> Hybrid</label>
+      </div>
+
+      <!-- Portfolio -->
+      <label for="portfolio">Portfolio Website (optional)</label>
+      <input type="text" id="portfolio"  name="portfolio">
+
+      <!-- Bio (Textarea) -->
+      <label for="bio">Short Bio</label>
+      <textarea id="bio" name="bio" rows="4" placeholder="Tell us a bit about yourself..."></textarea>
+
+      <!-- Additional Comments (Textarea) -->
+      <label for="comments">Additional Comments</label>
+      <textarea id="comments" name="comments" rows="3" placeholder="Anything else you'd like us to know?"></textarea>
+
+      <!-- Submit -->
+      <button type="submit">Register</button>
+    </form>
+  </div>
+</body>
+</html>
