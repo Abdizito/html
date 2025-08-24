@@ -1,0 +1,20 @@
+h1{
+  border: solid #ff0000 10px;
+  outline-style: double;
+  outline-color: #00ff00;
+  outline-width: 20px;
+  padding: 20px;
+  margin: 20px;
+  font-size: 30px;
+  font-family: Arial, sans-serif;
+  color: #0000ff;
+  text-align: center;
+  background-color: #ffff00;
+}
+
+span{
+  border-style: solid;
+  border-width: 10px;
+  border-color: #ff0000;
+  border-radius: 15px;
+}

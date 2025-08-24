@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ASTRA VOYAGES — The Art of Space Travel</title>
+  <meta name="description" content="A modern, artful landing page for a space travel agency. Pure HTML + CSS. Responsive, animated, accessible." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #0a0b13;
+      --bg-soft: #0f1221;
+      --acc: #8be9ff;
+      --acc-2: #b388ff;
+      --text: #e8ecf1;
+      --muted: #a7afc2;
+      --glass: rgba(255,255,255,.06);
+      --glow: 0 0 0 / 55%;
+      --radius-xl: 22px;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.45), 0 2px 10px rgba(0,0,0,.35);
+      --container: clamp(16rem, 90vw, 1200px);
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text); background:var(--bg);
+      line-height:1.6; overflow-x:hidden;
+    }
+
+    /* ===== Starfield Background ===== */
+    .cosmos{ position:fixed; inset:0; z-index:-2; background: radial-gradient(circle at 30% -10%, rgba(139,233,255,.25), transparent 35%), radial-gradient(circle at 80% 10%, rgba(179,136,255,.18), transparent 40%), radial-gradient(circle at 120% 40%, rgba(139,233,255,.12), transparent 35%), linear-gradient(180deg, #090b12 0%, #0b0f1e 65%, #080a12 100%); }
+    .stars, .stars::before, .stars::after{ position:fixed; content:""; inset:0; background-repeat:repeat; background-size: 200px 200px; animation: drift 120s linear infinite; }
+    .stars{ z-index:-1; opacity:.6; background-image: radial-gradient(1px 1px at 20px 30px, #fff, transparent), radial-gradient(1px 1px at 120px 80px, #a8d7ff, transparent), radial-gradient(1px 1px at 180px 60px, #fff, transparent), radial-gradient(1px 1px at 90px 140px, #d7b6ff, transparent); }
+    .stars::before{ background-image: radial-gradient(1px 1px at 40px 160px, #fff, transparent), radial-gradient(1px 1px at 160px 40px, #fff, transparent), radial-gradient(1px 1px at 10px 90px, #c8f1ff, transparent); animation-duration: 160s; opacity:.5 }
+    .stars::after{ background-image: radial-gradient(1px 1px at 100px 100px, #fff, transparent), radial-gradient(1px 1px at 60px 20px, #fff, transparent); animation-duration: 200s; opacity:.4 }
+    @keyframes drift{ from{transform:translateY(0)} to{transform:translateY(-200px)} }
+
+    /* ===== Utility ===== */
+    .container{ width:var(--container); margin-inline:auto; padding-inline: 1rem; }
+    .glass{ background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border:1px solid rgba(255,255,255,.08); box-shadow: var(--shadow); border-radius: var(--radius); }
+    .pill{ border-radius:999px; padding:.5rem 1rem; background:linear-gradient(90deg, rgba(139,233,255,.15), rgba(179,136,255,.15)); border:1px solid rgba(255,255,255,.12); display:inline-flex; align-items:center; gap:.5rem; }
+    .btn{ display:inline-flex; align-items:center; gap:.6rem; padding:.9rem 1.1rem; border-radius: 14px; text-decoration:none; font-weight:600; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
+    .btn-primary{ background:linear-gradient(90deg, var(--acc), var(--acc-2)); color:#0a0b13; box-shadow: 0 15px 30px rgba(139,233,255,.22); }
+    .btn-primary:hover{ transform: translateY(-2px) scale(1.01) }
+    .btn-ghost{ background:transparent; border:1px solid rgba(255,255,255,.22); color:var(--text) }
+    .btn-ghost:hover{ background: rgba(255,255,255,.06); }
+    .grid{ display:grid; gap:1.2rem }
+
+    /* ===== Header ===== */
+    header{ position:sticky; top:0; z-index:50; backdrop-filter:saturate(1.2) blur(6px); background:linear-gradient(180deg, rgba(10,11,19,.7), rgba(10,11,19,.35) 55%, transparent); border-bottom:1px solid rgba(255,255,255,.08); }
+    .nav{ display:flex; align-items:center; justify-content:space-between; padding:.8rem 0 }
+    .brand{ display:flex; align-items:center; gap:.7rem; font-weight:800; letter-spacing:.5px }
+    .logo{ width:34px; height:34px; border-radius:50%; background: radial-gradient(circle at 30% 30%, #fff 0 10%, var(--acc) 10% 65%, transparent 66%), conic-gradient(from 200deg at 50% 50%, rgba(139,233,255,.8), rgba(179,136,255,.8)); box-shadow:0 0 40px rgba(139,233,255,.45);
+    }
+
+    /* Mobile Menu (checkbox hack) */
+    #menu-toggle{ display:none }
+    .menu{ display:flex; gap:1.2rem; align-items:center }
+    .menu a{ text-decoration:none; color:var(--text); opacity:.9; font-weight:600 }
+    .menu a:hover{ opacity:1 }
+    .hamburger{ display:none; cursor:pointer; padding:.5rem; border-radius:12px; border:1px solid rgba(255,255,255,.14) }
+
+    @media (max-width: 860px){
+      .menu{ position:fixed; inset:64px 1rem auto 1rem; flex-direction:column; padding:1rem; background:var(--glass); border-radius:var(--radius-xl); transform: translateY(-20px); opacity:0; pointer-events:none; transition: .2s ease; }
+      #menu-toggle:checked + label + nav .menu{ opacity:1; transform:none; pointer-events:auto }
+      .hamburger{ display:inline-flex }
+    }
+
+    /* ===== Hero ===== */
+    .hero{ padding: 7rem 0 4rem; position:relative }
+    .hero .halo{ position:absolute; inset:-200px -40% auto -40%; height: 450px; background: radial-gradient(closest-side, rgba(139,233,255,.18), transparent 60%), radial-gradient(closest-side at 70% 40%, rgba(179,136,255,.16), transparent 60%); filter: blur(40px); z-index:-1; }
+    .hero h1{ font-size:clamp(2.1rem, 4.5vw + .5rem, 4.2rem); line-height:1.05; margin:0 0 1rem; letter-spacing:.5px }
+    .hero p{ color:var(--muted); max-width: 65ch; }
+    .hero-ctas{ display:flex; gap:.8rem; flex-wrap:wrap; margin-top:1.2rem }
+
+    .trust{ display:flex; gap:1.2rem; align-items:center; flex-wrap:wrap; margin-top:1.6rem; opacity:.9 }
+    .trust small{ color:var(--muted) }
+    .logos{ display:flex; gap:1.8rem; opacity:.7; filter:grayscale(1) contrast(1.2) }
+    .logo-mono{ width:88px; height:24px; background:linear-gradient(90deg, #9fb8ff, #b388ff); -webkit-mask: linear-gradient(#000 0 0) text; }
+
+    /* ===== Sections ===== */
+    section{ padding: 4rem 0 }
+    .section-title{ display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.2rem }
+    .section-title h2{ font-size: clamp(1.6rem, 2.5vw + .6rem, 2.4rem); margin:0 }
+    .muted{ color:var(--muted) }
+
+    /* Cards */
+    .cards{ display:grid; grid-template-columns: repeat(12, 1fr); gap:1rem }
+    .card{ grid-column: span 4; border-radius: var(--radius-xl); overflow:hidden; position:relative; isolation:isolate; background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease }
+    .card:hover{ transform: translateY(-6px); border-color: rgba(139,233,255,.5); box-shadow:0 20px 60px rgba(139,233,255,.1) }
+    .card .media{ aspect-ratio: 16/10; background: center / cover no-repeat; }
+    .card .content{ padding:1.1rem }
+    .badge{ display:inline-block; font-size:.8rem; padding:.35rem .6rem; border-radius:999px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.04) }
+
+    @media (max-width: 1000px){ .card{ grid-column: span 6 } }
+    @media (max-width: 700px){ .card{ grid-column: span 12 } }
+
+    /* Fleet specs */
+    .specs{ display:flex; gap:1rem; flex-wrap:wrap; margin-top:.6rem }
+    .spec{ padding:.45rem .7rem; border-radius:10px; border:1px solid rgba(255,255,255,.14); font-size:.9rem; opacity:.9 }
+
+    /* Pricing */
+    .pricing{ display:grid; grid-template-columns: repeat(12, 1fr); gap:1rem }
+    .plan{ grid-column: span 4; padding:1.2rem; border-radius:var(--radius-xl); border:1px solid rgba(255,255,255,.1); background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025)); position:relative }
+    .plan.popular{ outline:2px solid rgba(139,233,255,.55); box-shadow:0 25px 60px rgba(139,233,255,.14) }
+    .price{ font-size:2.2rem; font-weight:800; letter-spacing:.5px }
+    .features{ list-style:none; margin:1rem 0 0; padding:0 }
+    .features li{ display:flex; gap:.6rem; align-items:flex-start; margin:.5rem 0 }
+    .features svg{ flex:0 0 auto }
+    @media (max-width: 1000px){ .plan{ grid-column: span 6 } }
+    @media (max-width: 700px){ .plan{ grid-column: span 12 } }
+
+    /* Testimonials */
+    .testimonials{ display:grid; grid-template-columns: repeat(12, 1fr); gap:1rem }
+    .quote{ grid-column: span 6; padding:1rem; border-radius:18px; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.04) }
+    .quote p{ margin:.4rem 0 }
+    @media (max-width: 900px){ .quote{ grid-column: span 12 } }
+
+    /* FAQ */
+    details{ border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:.9rem 1rem; background:rgba(255,255,255,.04) }
+    details + details{ margin-top:.8rem }
+    summary{ cursor:pointer; font-weight:600 }
+
+    /* CTA Banner */
+    .cta{ position:relative; overflow:hidden; border-radius: 24px; padding:2rem; background: radial-gradient(1200px 400px at -10% 0%, rgba(139,233,255,.15), transparent 60%), radial-gradient(1000px 300px at 120% 120%, rgba(179,136,255,.2), transparent 60%), linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.12) }
+
+    /* Footer */
+    footer{ border-top:1px solid rgba(255,255,255,.08); padding:2rem 0; color:var(--muted) }
+
+    /* Accessibility helpers */
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0 }
+  </style>
+</head>
+<body>
+  <div class="cosmos" aria-hidden="true"></div>
+  <div class="stars" aria-hidden="true"></div>
+
+  <!-- ===== Header ===== -->
+  <header>
+    <div class="container nav">
+      <div class="brand" aria-label="Astra Voyages">
+        <div class="logo" aria-hidden="true"></div>
+        <span>ASTRA VOYAGES</span>
+      </div>
+
+      <input type="checkbox" id="menu-toggle" aria-label="Open Menu">
+      <label class="hamburger glass" for="menu-toggle" aria-hidden="true">☰</label>
+
+      <nav aria-label="Primary">
+        <div class="menu glass">
+          <a href="#destinations">Destinations</a>
+          <a href="#fleet">Fleet</a>
+          <a href="#experience">Experience</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#faq">FAQ</a>
+          <a class="btn btn-primary" href="#book">Book a Mission</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="halo" aria-hidden="true"></div>
+    <div class="container">
+      <span class="pill" role="img" aria-label="shooting star">✨ Next‑Gen Luxury Space Travel</span>
+      <h1>The Art of Leaving Earth.</h1>
+      <p>
+        Cruise above the blue marble in mirror‑calm comfort. Our orbital suites and lunar flybys blend museum‑grade design, chef‑crafted cuisine, and zero‑gravity joy—delivered with aerospace‑certified safety.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#destinations">Explore Itineraries</a>
+        <a class="btn btn-ghost" href="#experience">See the Experience</a>
+      </div>
+      <div class="trust">
+        <small>Trusted by explorers from</small>
+        <div class="logos" aria-hidden="true">
+          <div class="logo-mono" title="Cosmica"></div>
+          <div class="logo-mono" title="OrbitalOne"></div>
+          <div class="logo-mono" title="Zenith Labs"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Destinations ===== -->
+  <section id="destinations">
+    <div class="container">
+      <div class="section-title">
+        <h2>Destinations</h2>
+        <p class="muted">From blue‑edge orbits to silver lunar dawns.</p>
+      </div>
+      <div class="cards">
+        <article class="card" aria-label="Orbital Retreat">
+          <div class="media" style="background-image:url('https://images.unsplash.com/photo-1447433819943-74a20887a81e?q=80&w=1600&auto=format&fit=crop');"></div>
+          <div class="content">
+            <span class="badge">3 days</span>
+            <h3>Orbital Retreat</h3>
+            <p class="muted">Slip into the velvet night. Sunrise every 90 minutes, private viewport lounge, sommelier on call.</p>
+          </div>
+        </article>
+        <article class="card" aria-label="Lunar Flyby">
+          <div class="media" style="background-image:url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1600&auto=format&fit=crop');"></div>
+          <div class="content">
+            <span class="badge">5 days</span>
+            <h3>Lunar Flyby</h3>
+            <p class="muted">Arc past the terminator line. Witness earthrise in cathedral‑quiet luxury.</p>
+          </div>
+        </article>
+        <article class="card" aria-label="Aurora Express">
+          <div class="media" style="background-image:url('https://images.unsplash.com/photo-1462332420958-a05d1e002413?q=80&w=1600&auto=format&fit=crop');"></div>
+          <div class="content">
+            <span class="badge">Overnight</span>
+            <h3>Aurora Express</h3>
+            <p class="muted">Chase the solar winds. A polar orbit drenched in emerald ribbons.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Fleet ===== -->
+  <section id="fleet">
+    <div class="container">
+      <div class="section-title">
+        <h2>Fleet</h2>
+        <p class="muted">Whisper‑quiet cabins. Thunder‑sure engines.</p>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <div class="media" style="background-image:url('https://images.unsplash.com/photo-1580657769534-0ef3d51b5426?q=80&w=1600&auto=format&fit=crop');"></div>
+          <div class="content">
+            <h3>SV‑01 "Seraph"</h3>
+            <p class="muted">Orbital suite craft with panoramic dome, anti‑vibration decking, and private galley.</p>
+            <div class="specs">
+              <span class="spec">6 guests</span>
+              <span class="spec">900 km apogee</span>
+              <span class="spec">Whisper Ion Gen‑4</span>
+            </div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="media" style="background-image:url('https://images.unsplash.com/photo-1517976487492-576e78a5a37e?q=80&w=1600&auto=format&fit=crop');"></div>
+          <div class="content">
+            <h3>LV‑3 "Lumen"</h3>
+            <p class="muted">Lunar‑rated with radiation‑soft cabin lighting and stargazer suite.</p>
+            <div class="specs">
+              <span class="spec">4 guests</span>
+              <span class="spec">Lunar flyby</span>
+              <span class="spec">Hybrid Chem‑Ion</span>
+            </div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="media" style="background-image:url('https://images.unsplash.com/photo-1465101046530-73398c7f28ca?q=80&w=1600&auto=format&fit=crop');"></div>
+          <div class="content">
+            <h3>AX‑9 "Aurora"</h3>
+            <p class="muted">Polar orbit specialist for maximum aurora exposure with cinematic viewing lounge.</p>
+            <div class="specs">
+              <span class="spec">8 guests</span>
+              <span class="spec">Polar orbit</span>
+              <span class="spec">Solar‑shielded</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Experience ===== -->
+  <section id="experience">
+    <div class="container">
+      <div class="section-title">
+        <h2>The Experience</h2>
+        <p class="muted">Designed for wonder. Engineered for calm.</p>
+      </div>
+      <div class="grid" style="grid-template-columns: repeat(12, 1fr); align-items:start">
+        <div class="glass" style="grid-column: span 7; padding:1.2rem">
+          <h3>Cabin & Cuisine</h3>
+          <p class="muted">Lie‑flat suites with memory gel harness, personal viewport, and sky‑sommelier service. Multi‑course tasting menus adapt to micro‑gravity.</p>
+          <h3>Safety</h3>
+          <p class="muted">Dual‑redundant life support, AI‑assisted navigation, and astronaut‑led training included with every itinerary.</p>
+        </div>
+        <div class="glass" style="grid-column: span 5; padding:1.2rem">
+          <h3>Itinerary Snapshot</h3>
+          <ul class="features">
+            <li>✔︎ Private pre‑flight lounge</li>
+            <li>✔︎ Zero‑G acclimation session</li>
+            <li>✔︎ Orbital photography workshop</li>
+            <li>✔︎ Comms call home over blue‑edge</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Pricing ===== -->
+  <section id="pricing">
+    <div class="container">
+      <div class="section-title">
+        <h2>Pricing</h2>
+        <p class="muted">Transparent fares. Infinite memories.</p>
+      </div>
+      <div class="pricing">
+        <div class="plan">
+          <span class="badge">Starter</span>
+          <h3>Edge of Space</h3>
+          <p class="price">£89,000</p>
+          <p class="muted">Sub‑orbital hop, training, keepsake media pack.</p>
+          <a class="btn btn-ghost" href="#book">Enquire</a>
+          <ul class="features">
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              1.5 hours gate‑to‑gate
+            </li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Zero‑G float session</li>
+          </ul>
+        </div>
+        <div class="plan popular">
+          <span class="badge">Most Loved</span>
+          <h3>Orbital Retreat</h3>
+          <p class="price">£320,000</p>
+          <p class="muted">3‑day orbit with private suite and window time.</p>
+          <a class="btn btn-primary" href="#book">Reserve</a>
+          <ul class="features">
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dedicated sky‑sommelier</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Photography masterclass</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> 24/7 concierge</li>
+          </ul>
+        </div>
+        <div class="plan">
+          <span class="badge">Elite</span>
+          <h3>Lunar Flyby</h3>
+          <p class="price">£980,000</p>
+          <p class="muted">5‑day mission, earthrise viewing, private cabin.</p>
+          <a class="btn btn-ghost" href="#book">Enquire</a>
+          <ul class="features">
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Astronaut co‑pilot</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Private comms window</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Testimonials ===== -->
+  <section aria-labelledby="voices">
+    <div class="container">
+      <div class="section-title">
+        <h2 id="voices">What Travelers Say</h2>
+        <p class="muted">Real words from beyond the atmosphere.</p>
+      </div>
+      <div class="testimonials">
+        <figure class="quote">
+          <figcaption>„I forgot the word for blue. It was just Earth.“</figcaption>
+          <p class="muted">— Leila A., Orbital Retreat</p>
+        </figure>
+        <figure class="quote">
+          <figcaption>„Silence has a texture. They managed to bottle it.“</figcaption>
+          <p class="muted">— Marco D., Aurora Express</p>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-title">
+        <h2>FAQ</h2>
+        <p class="muted">Everything you wonder, answered.</p>
+      </div>
+      <details>
+        <summary>Do I need prior flight experience?</summary>
+        <p class="muted">No. A two‑day preparation covers safety, motion, and zero‑G basics with our astronaut team.</p>
+      </details>
+      <details>
+        <summary>What should I pack?</summary>
+        <p class="muted">We provide mission wear. Bring soft shoes, personal items, and a curious heart.</p>
+      </details>
+      <details>
+        <summary>Is it safe?</summary>
+        <p class="muted">Yes. All missions meet international human‑spaceflight standards and include medical screening.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section id="book">
+    <div class="container">
+      <div class="cta">
+        <h2>Ready to leave the ordinary behind?</h2>
+        <p class="muted">Secure a consultation with our mission designers. No obligation—just possibilities.</p>
+        <div style="display:flex; gap:.8rem; flex-wrap:wrap; margin-top:.6rem">
+          <a class="btn btn-primary" href="#">Start Your Mission Plan</a>
+          <a class="btn btn-ghost" href="#">Request a Brochure</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap">
+      <small>© <span id="y"></span> Astra Voyages Ltd. All rights reserved.</small>
+      <small><a href="#" style="color:inherit">Terms</a> · <a href="#" style="color:inherit">Privacy</a> · <a href="#" style="color:inherit">Contact</a></small>
+    </div>
+  </footer>
+
+  <!-- Tiny inline script just to set the year; remove if you want 100% CSS/HTML only. -->
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>
